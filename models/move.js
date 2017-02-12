@@ -1,4 +1,4 @@
-const debug = require('debug')('bomb-bot:move');
+const debug = require('debug')('bombastic-bot:move');
 
 class Move {
 

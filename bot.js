@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const request = require('request');
 const jwt = require('jsonwebtoken');
-const debug = require('debug')('bomb-bot:bot');
+const debug = require('debug')('bombastic-bot:bot');
 const io = require('socket.io-client');
 
 const config = require('./config');
@@ -59,30 +59,46 @@ class Bot {
         });
     }
 
-    games() {
+    fetchGames(callback) {
         this.api.get('games', (err, httpResponse, body) => {
             const json = JSON.parse(body);
             this.games = _.map(json.games, g => new Game(g));
 
-            debug(this.games.length + ' games');
-
-            _.each(json.games, g => debug(' ' + g._id));
-
-            if (this.isOurTurn(this.games[0])) {
-
-
-                this.makeRandomMove(this.games[0], (err, res) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-
-                    debug(res);
-
-                    this.games[0].updateGame(res);
-                });
-            } else debug('not our turn');
+            callback(null, this.games);
         });
+    }
+
+    checkGames() {
+        debug('checking games');
+        let games = _.where(this.games, this.isOurTurn);
+
+        // only want one for debugging
+        games = _.initial(games, games.length - 1);
+
+        if (_.isEmpty(games)) {
+            console.info('no games to be played atm.');
+            return;
+        }
+
+        console.info('playing %d games', games.length);
+        _.each(games, game => {
+            console.info(game.toString());
+
+            this.makeRandomMove(game, (err, res) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                if (res.result === ':(') {
+                    console.error(res.message);
+                    return;
+                }
+
+                game.updateGame(res);
+            });
+        });
+
     }
 
     makeRandomMove(game, callback) {
@@ -101,6 +117,7 @@ class Bot {
     }
 
     isOurTurn(game) {
+        debug('playing as %s', this.playerId);
         return game.turnPlayer.id === this.playerId;
     }
 }

@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const debug = require('debug')('bomb-bot:game');
+const debug = require('debug')('bombastic-bot:game');
 const Move = require('./move');
 const Player = require('./player');
 
@@ -39,6 +39,8 @@ class Game {
     }
 
     updateGame(gameResponse) {
+        debug(gameResponse);
+
         debug(this.moves.length);
         debug(gameResponse.moves.length);
         this.stake = gameResponse.stake;

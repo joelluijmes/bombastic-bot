@@ -1,5 +1,5 @@
 var request = require('request');
-var debug = require('debug')('bomb-bot:app');
+var debug = require('debug')('bombastic-bot:app');
 const config = require('./config');
 var url = 'http://92.109.3.160:3000/api/';
 
@@ -8,13 +8,23 @@ const Bot = require('./bot');
 let bot = new Bot('joel', '123qwe');
 bot.login((err) => {
     if (err) {
-        debug(err);
+        console.error(err);
         return;
     }
 
-    debug('DisplayName: ' + bot.displayName);
+    console.info('logged in (%s)', bot.displayName);
 
-    bot.games();
+    bot.fetchGames((err, games) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+
+        //console.log(bot.toString());
+        //console.log();
+
+        bot.checkGames();
+    });
 });
 
 

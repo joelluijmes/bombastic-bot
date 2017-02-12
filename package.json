@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set DEBUG=bomb-bot:* && nodemon app.js"
+    "start": "DEBUG=bombastic-bot:* node-supervisor -n error app.js"
   },
   "dependencies": {
     "debug": "^2.6.1",
@@ -23,5 +23,10 @@
     "url": "https://github.com/joelluijmes/bombastic-bot/issues"
   },
   "homepage": "https://github.com/joelluijmes/bombastic-bot#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "console-error": "0.0.4",
+    "console-info": "0.0.5",
+    "console-warn": "0.0.4"
+  }
 }
