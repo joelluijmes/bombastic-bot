@@ -1,13 +1,27 @@
 {
-  "name": "bomb-bot",
+  "name": "bombastic-bot",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "set DEBUG=bomb-bot:* && nodemon app.js"
   },
   "dependencies": {
+    "debug": "^2.6.1",
     "jsonwebtoken": "^7.2.1",
+    "request": "^2.79.0",
     "socket.io-client": "^1.7.2",
     "underscore": "^1.8.3"
-  }
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelluijmes/bombastic-bot.git"
+  },
+  "author": "Joël Luijmes",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/joelluijmes/bombastic-bot/issues"
+  },
+  "homepage": "https://github.com/joelluijmes/bombastic-bot#readme",
+  "description": ""
 }
