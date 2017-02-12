@@ -13,13 +13,12 @@ class Bot {
         this.username = username;
         this.password = password;
 
-        this.api = request.defaults({baseUrl: config.apiUrl});
+        this.api = request.defaults({
+            baseUrl: config.apiUrl
+        });
 
         this.socket = io('http://')
     }
-
-    //authToken = xxx.(xxx).xxx -> base64 decode OFFFF je bent lui, en je zoekt json webtoken
-
 
     createAccount(displayname) {
         this.api.post('register', {
@@ -47,14 +46,13 @@ class Bot {
 
             this.token = jwt.decode(httpResponse.headers.authorization.substring("Bearer ".length));
             this.displayName = this.token.displayName;
+            this.playerId = this.token.userId;
 
             this.api = this.api.defaults({
                 headers: {
                     'Authorization': httpResponse.headers.authorization
                 }
             });
-
-            debug(body);
 
             if (callback)
                 callback();
@@ -63,11 +61,47 @@ class Bot {
 
     games() {
         this.api.get('games', (err, httpResponse, body) => {
-            let json = JSON.parse(body);
+            const json = JSON.parse(body);
             this.games = _.map(json.games, g => new Game(g));
 
-            debug(this.games);
+            debug(this.games.length + ' games');
+
+            _.each(json.games, g => debug(' ' + g._id));
+
+            if (this.isOurTurn(this.games[0])) {
+
+
+                this.makeRandomMove(this.games[0], (err, res) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+
+                    debug(res);
+
+                    this.games[0].updateGame(res);
+                });
+            } else debug('not our turn');
         });
+    }
+
+    makeRandomMove(game, callback) {
+        let tile = game.validateMove();
+
+        debug('id ' + game.id);
+
+        this.api.post('game/move/', {
+            form: {
+                tileId: tile,
+                gameId: game.id
+            }
+        }, (err, httpResponse, body) => {
+            callback(err, JSON.parse(body));
+        });
+    }
+
+    isOurTurn(game) {
+        return game.turnPlayer.id === this.playerId;
     }
 }
 
