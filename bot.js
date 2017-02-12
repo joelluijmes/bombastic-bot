@@ -1,8 +1,12 @@
+const _ = require('underscore');
 const request = require('request');
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('bomb-bot:bot');
 const io = require('socket.io-client');
+
 const config = require('./config');
+const Move = require('./models/move');
+const Game = require('./models/game');
 
 class Bot {
     constructor(username, password) {
@@ -59,7 +63,10 @@ class Bot {
 
     games() {
         this.api.get('games', (err, httpResponse, body) => {
-            console.log(body);
+            let json = JSON.parse(body);
+            this.games = _.map(json.games, g => new Game(g));
+
+            debug(this.games);
         });
     }
 }
