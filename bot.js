@@ -100,24 +100,6 @@ class Bot {
         });
     }
 
-    toString() {
-        let str = '';
-
-        _.each(this.games, g => {
-            str += `${g.id}\r\n`;
-            str += `players\r\n`;
-            _.each(g.players, p => str += `${p.toString()}\r\n`);
-
-            str += ` stake: ${g.stake}\r\n`;
-            str += ` bombs: ${g.bombs}\r\n`;
-            str += ` creator: ${g.creator.id}\r\n`;
-            str += ` turn: ${g.turnPlayer.id}\r\n`;
-            str += '\r\n';
-        });
-
-        return str;
-    }
-
     isOurTurn(game) {
         return game.turnPlayer.id === this.playerId;
     }

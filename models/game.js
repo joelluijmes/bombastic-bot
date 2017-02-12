@@ -51,6 +51,21 @@ class Game {
         debug(this.moves.length);
     }
 
+    toString() {
+        let str = '';
+
+        str += `${this.id}\r\n`;
+        str += ` players\r\n`;
+        _.each(this.players, p => str += `${p.toString()}\r\n`);
+
+        str += ` stake: ${this.stake}\r\n`;
+        str += ` bombs: ${this.bombs}\r\n`;
+        str += ` creator: ${this.creator.id}\r\n`;
+        str += ` turn: ${this.turnPlayer.id}\r\n`;
+
+        return str;
+    }
+
 }
 
 function random(low, high) {
