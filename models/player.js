@@ -1,13 +1,19 @@
 const _ = require('underscore');
-// const debug = require('debug')('bomb-bot:player');
+// const debug = require('debug')('bombastic-bot:player');
 
 class Player {
 
     constructor(opts) {
         this.id = opts.id;
-        this.displayname = opts.displayname;
+        this.displayName = opts.displayname;
         this.points = opts.points;
         this.colorId = opts.colorId;
+    }
+
+    toString() {
+        return ` ${this.displayName} (${this.id})\r\n` +
+        ` points: ${this.points}\r\n` +
+        ` color: ${this.colorId}\r\n`;
     }
 
 }
