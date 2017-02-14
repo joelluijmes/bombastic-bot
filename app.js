@@ -9,7 +9,6 @@ bot.login(loginCallback);
 
 function loginCallback(err) {
     if (err) {
-        console.error(err);
         if (err === 'Unkown username') {
             bot.register(bot.username, (err, res) => {
                 console.log(res);
@@ -28,7 +27,18 @@ function loginCallback(err) {
         return;
     }
 
-    console.info('logged in (%s)', bot.displayName);
+    console.info('logged in as (%s)', bot.displayName);
+    // TODO: add with user status, if server gives us taht..
+    // console.info(bot.toString());
+
+    let game = {
+        opponent: 'joel2-bot#8075'
+    };
+    bot.createGame(game, (err, game) => {
+        console.info(game.toString());
+    });
+
+    return;
 
     bot.fetchGames((err, games) => {
         if (err) {

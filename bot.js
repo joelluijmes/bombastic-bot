@@ -26,8 +26,9 @@ class Bot {
                 username: this.username,
                 password: this.password,
                 displayname: displayname
-            }, json: true
-        }, (err, httpResponse, body) => {
+            },
+            json: true
+        }, (err, res, body) => {
             callback(err, body);
         });
     }
@@ -37,18 +38,19 @@ class Bot {
             form: {
                 username: this.username,
                 password: this.password
-            }, json: true
-        }, (err, httpResponse, body) => {
+            },
+            json: true
+        }, (err, res, body) => {
             if (err || (body && body.result === ':('))
                 return callback(err || body.message);
 
-            this.token = jwt.decode(httpResponse.headers.authorization.substring("Bearer ".length));
+            this.token = jwt.decode(res.headers.authorization.substring("Bearer ".length));
             this.displayName = this.token.displayName;
             this.playerId = this.token.userId;
 
             this.api = this.api.defaults({
                 headers: {
-                    'Authorization': httpResponse.headers.authorization
+                    'Authorization': res.headers.authorization
                 }
             });
 
@@ -58,12 +60,26 @@ class Bot {
     }
 
     fetchGames(callback) {
-        this.api.get('games', (err, httpResponse, body) => {
+        this.api.get('games', (err, res, body) => {
             const json = JSON.parse(body);
             this.games = _.map(json.games, g => new Game(g));
 
             callback(null, this.games);
         });
+    }
+
+    createGame(opts, callback) {
+        this.api.post('game/create', {
+            form: {
+                bet: opts.bet || config.DEFAULT_BET,
+                opponent: opts.opponent,
+                colorId: opts.colorId || config.DEFAULT_COLORID, // TODO: random
+                bombs: opts.bombs || config.DEFAULT_BOMBS
+            },
+            json: true
+        }, (err, res, body) => {
+            callback(err, new Game(body));
+        })
     }
 
     checkGames() {
@@ -109,13 +125,20 @@ class Bot {
                 tileId: tile,
                 gameId: game.id
             }
-        }, (err, httpResponse, body) => {
+        }, (err, res, body) => {
             callback(err, JSON.parse(body));
         });
     }
 
     isOurTurn(game) {
         return game.turnPlayer.id === Bot.playerId;
+    }
+
+    toString() {
+        if (typeof(this.games) === 'undefined')
+            return 'No games to play';
+
+        return `${this.games.length} games (${_.filter(this.games, isOurTurn)} our turn)`;
     }
 }
 

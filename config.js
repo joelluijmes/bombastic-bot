@@ -6,4 +6,9 @@ module.exports = Object.freeze({
     apiUrl: HOST + ':' + PORT + '/api/',
     username: process.env.USER_NAME || 'joel',
     password: process.env.PASS || '123qwe',
+
+    // TODO: read from file
+    DEFAULT_BET: process.env.DEFAULT_BET || 100,
+    DEFAULT_COLORID: process.env.DEFAULT_COLORID || 1,
+    DEFAULT_BOMBS: process.env.DEFAULT_BOMBS || 3
 });
