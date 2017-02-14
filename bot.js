@@ -20,15 +20,15 @@ class Bot {
         this.socket = io('http://')
     }
 
-    createAccount(displayname) {
+    register(displayname, callback) {
         this.api.post('register', {
             form: {
                 username: this.username,
                 password: this.password,
                 displayname: displayname
-            }
+            }, json: true
         }, (err, httpResponse, body) => {
-            debug(body);
+            callback(err, body);
         });
     }
 
@@ -37,12 +37,10 @@ class Bot {
             form: {
                 username: this.username,
                 password: this.password
-            }
+            }, json: true
         }, (err, httpResponse, body) => {
-            if (err) {
-                callback(err);
-                return;
-            }
+            if (err || (body && body.result === ':('))
+                return callback(err || body.message);
 
             this.token = jwt.decode(httpResponse.headers.authorization.substring("Bearer ".length));
             this.displayName = this.token.displayName;
@@ -69,8 +67,8 @@ class Bot {
     }
 
     checkGames() {
-        debug('checking games');
-        let games = _.where(this.games, this.isOurTurn);
+        debug('checking games..');
+        let games = _.filter(this.games, this.isOurTurn);
 
         // only want one for debugging
         games = _.initial(games, games.length - 1);
@@ -117,8 +115,7 @@ class Bot {
     }
 
     isOurTurn(game) {
-        debug('playing as %s', this.playerId);
-        return game.turnPlayer.id === this.playerId;
+        return game.turnPlayer.id === Bot.playerId;
     }
 }
 

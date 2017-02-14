@@ -1,14 +1,30 @@
-var request = require('request');
-var debug = require('debug')('bombastic-bot:app');
+const request = require('request');
+const debug = require('debug')('bombastic-bot:app');
 const config = require('./config');
-var url = 'http://92.109.3.160:3000/api/';
 
 const Bot = require('./bot');
 
-let bot = new Bot('joel', '123qwe');
-bot.login((err) => {
+const bot = new Bot(config.username, config.password);
+bot.login(loginCallback);
+
+function loginCallback(err) {
     if (err) {
         console.error(err);
+        if (err === 'Unkown username') {
+            bot.register(bot.username, (err, res) => {
+                console.log(res);
+                if (err) {
+                    console.error(err);
+                    return
+                }
+
+                console.info('registered a new account.');
+                bot.login(loginCallback);
+            });
+        } else {
+            console.error(err);
+        }
+
         return;
     }
 
@@ -25,7 +41,7 @@ bot.login((err) => {
 
         bot.checkGames();
     });
-});
+}
 
 
 // request.post(url + 'login', {
