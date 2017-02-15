@@ -3,16 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-<<<<<<< HEAD
     "start": "DEBUG=bombastic-bot:* node-supervisor -n error app.js"
-=======
-    "start": "set DEBUG=bomb-bot:* && nodemon app.js"
->>>>>>> 38ba087592b7ed80259ec7a4a983b20d9b7a2bd3
   },
   "dependencies": {
     "debug": "^2.6.1",
     "jsonwebtoken": "^7.2.1",
-<<<<<<< HEAD
     "request": "^2.79.0",
     "socket.io-client": "^1.7.2",
     "underscore": "^1.8.3"
@@ -32,10 +27,8 @@
   "devDependencies": {
     "console-error": "0.0.4",
     "console-info": "0.0.5",
-    "console-warn": "0.0.4"
-=======
+    "console-warn": "0.0.4",
     "nano": "^6.2.0",
     "socket.io-client": "^1.7.2"
->>>>>>> 38ba087592b7ed80259ec7a4a983b20d9b7a2bd3
   }
 }
