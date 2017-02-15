@@ -17,7 +17,7 @@ class Bot {
             baseUrl: config.apiUrl
         });
 
-        this.socket = io('http://')
+        this.games = [];
     }
 
     register(displayname, callback) {
@@ -59,12 +59,24 @@ class Bot {
         });
     }
 
+    consumeGame(updatedGame) {
+        let localGame = _.find(this.games, g => g.id === updatedGame.id);
+        if (localGame) {
+            localGame.updateGame(updatedGame);
+            console.info('updated game!');
+        } else {
+            this.games.push(updatedGame);
+            console.info('added new game!');
+        }
+    }
+
     fetchGames(callback) {
         this.api.get('games', (err, res, body) => {
             const json = JSON.parse(body);
             this.games = _.map(json.games, g => new Game(g));
 
-            callback(null, this.games);
+            if (callback)
+                callback(null, this.games);
         });
     }
 

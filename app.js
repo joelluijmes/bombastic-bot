@@ -1,7 +1,8 @@
 const request = require('request');
 const debug = require('debug')('bombastic-bot:app');
 const config = require('./config');
-const dbWatcher = require('./dbWatcher');
+
+const DbWatcher = require('./dbWatcher');
 const Bot = require('./bot');
 
 const bot = new Bot(config.username, config.password);
@@ -30,6 +31,12 @@ function loginCallback(err) {
     console.info('logged in as (%s)', bot.displayName);
     // TODO: add with user status, if server gives us taht..
     // console.info(bot.toString());
+
+    bot.fetchGames();
+    const dbWatcher = new DbWatcher(bot);
+    dbWatcher.start();
+
+    return;
 
     let game = {
         opponent: 'joel2-bot#8075'
