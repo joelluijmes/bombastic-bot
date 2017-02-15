@@ -1,7 +1,7 @@
 var request = require('request');
 var debug = require('debug')('bomb-bot:app');
 const config = require('./config');
-var url = 'http://92.109.3.160:3000/api/';
+const dbWatcher = require('./dbWatcher');
 
 const Bot = require('./bot');
 
