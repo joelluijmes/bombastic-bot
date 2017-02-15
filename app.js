@@ -2,6 +2,8 @@ const request = require('request');
 const debug = require('debug')('bombastic-bot:app');
 const config = require('./config');
 
+const dbWatcher = require('./dbWatcher');
+
 const Bot = require('./bot');
 
 const bot = new Bot(config.username, config.password);
@@ -51,7 +53,6 @@ function loginCallback(err) {
 
         bot.checkGames();
     });
-}
 
 
 // request.post(url + 'login', {
@@ -64,3 +65,5 @@ function loginCallback(err) {
 //   var token = httpResponse.headers.authorization;
 //   debug(token);
 // });
+    bot.games();
+});
