@@ -16,15 +16,3 @@ bot.login((err) => {
 
     bot.games();
 });
-
-
-// request.post(url + 'login', {
-//     form: {
-//         username: 'joel',
-//         password: '123qwe'
-//     }
-// }, function(err, httpResponse, body) {
-//   debug(body);
-//   var token = httpResponse.headers.authorization;
-//   debug(token);
-// });
